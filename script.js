@@ -1,26 +1,33 @@
-const form = document.querySelector('form');
-const results = document.getElementById('results');
+document.getElementById('bmi-form').addEventListener('submit', function(e) {
+  e.preventDefault();
 
-form.addEventListener('submit', (event) => {
-  event.preventDefault();
+  const heightInput = document.getElementById('height');
+  const weightInput = document.getElementById('weight');
+  const resultDiv = document.getElementById('result');
 
-  const height = parseFloat(document.getElementById('height').value);
-  const weight = parseFloat(document.getElementById('weight').value);
-  if (height === '' || isNaN(height) || height < 0) {
-    results.innerHTML = 'Enter valid height';
-  } else if (weight === '' || isNaN(weight) || weight < 0) {
-    results.innerHTML = 'Enter valid weight';
-  } else {
-    results.style.color = 'black';
-    const heightInMeter = height / 100;
-    const bmi = (weight / (heightInMeter * heightInMeter)).toFixed(2);
+  const height = parseFloat(heightInput.value);
+  const weight = parseFloat(weightInput.value);
 
-    if (bmi < 18.6) {
-      results.innerHTML = `Your BMI is <span>${bmi}</span><div>You are Under Weight</div>`;
-    } else if (bmi >= 18.6 && bmi <= 24.9) {
-      results.innerHTML = `Your BMI is <span>${bmi}</span><div>Your BMI report is Normal</div>`;
-    } else {
-      results.innerHTML = `Your BMI is <span>${bmi}</span><div>You are Overweight</div>`;
-    }
+  if (isNaN(height) || isNaN(weight) || height <= 0 || weight <= 0) {
+    resultDiv.textContent = 'Please enter valid height and weight values.';
+    return;
   }
+
+  const heightInMeters = height / 100;
+  const bmi = weight / (heightInMeters * heightInMeters);
+  const bmiRounded = bmi.toFixed(1);
+
+  let category = '';
+
+  if (bmi < 18.5) {
+    category = 'Underweight';
+  } else if (bmi < 24.9) {
+    category = 'Normal weight';
+  } else if (bmi < 29.9) {
+    category = 'Overweight';
+  } else {
+    category = 'Obesity';
+  }
+
+  resultDiv.textContent = `Your BMI is ${bmiRounded} (${category}).`;
 });
